@@ -33,7 +33,7 @@ export const Logo: React.FC<LogoProps> = ({
     '2xl': 'h-28 sm:h-32',
   };
 
-  const logoSrc = variant === 'banner' ? BRAND.LOGO_PATH : '/assets/logo-crest2x.svg';
+  const logoSrc = BRAND.LOGO_PATH;
 
   return (
     <div className={`flex items-center gap-3 select-none ${className}`}>
