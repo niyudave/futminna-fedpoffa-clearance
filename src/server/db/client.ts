@@ -532,6 +532,19 @@ class RelationalStore {
         activeStage: 4,
         stageStatus: 'PENDING',
       },
+      {
+        id: 'std_011',
+        firstName: 'Obafemi',
+        lastName: 'David',
+        email: 'obafemi.david@futminna-fedpoffa.edu.ng',
+        matricNumber: '2020/1/00050CS',
+        jambRegNumber: '202029482011RQ',
+        departmentId: cscDept?.id || 'dept_1',
+        facultyId: fastFaculty?.id || 'fac_1',
+        cgpa: 3.92,
+        activeStage: 1,
+        stageStatus: 'PENDING',
+      },
     ];
 
     const studentRoleObj = this.roles.find((r) => r.name === 'STUDENT');
