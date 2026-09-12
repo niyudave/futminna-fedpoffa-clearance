@@ -9,7 +9,7 @@ export const BRAND = {
   AFFILIATION_NAME: 'Federal Polytechnic Offa Campus',
   SYSTEM_TITLE: 'Student Clearance Management System',
   SHORT_TITLE: 'FUTMINNA-FEDPOFFA E-CLEARANCE',
-  LOGO_PATH: '/assets/logo-crest2x.svg',
+  LOGO_PATH: '/assets/logo-degree2x.png',
   
   // Official Institutional Palette
   COLORS: {
