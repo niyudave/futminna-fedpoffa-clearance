@@ -1,0 +1,6 @@
+{
+  "name": "FUTMINNA-FEDPOFFA E-CLEARANCE",
+  "description": "Web-Based Student Clearance Management System for FEDPOFFA in affiliation with FUTMINNA, featuring secure authentication, Bcrypt password hashing, JWT session management, and granular 9-role RBAC authorization.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

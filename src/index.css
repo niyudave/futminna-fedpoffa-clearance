@@ -1,0 +1,453 @@
+@import "tailwindcss";
+
+:root {
+  /* Surface & Background High-Contrast Tokens */
+  --surface-app: #F7F7F9;
+  --surface-card: #FFFFFF;
+  --surface-subtle: #FAFAFB;
+  --surface-elevated: #FFFFFF;
+  --surface-hover: #F3EAF8;
+  --surface-muted: #F3F4F6;
+
+  /* Typography Tokens */
+  --text-primary: #1F2937;
+  --text-secondary: #6B7280;
+  --text-muted: #9CA3AF;
+  --text-heading: #1E0538;
+  --text-inverse: #FFFFFF;
+
+  /* Border & Ledger Tokens */
+  --border-default: #E5E7EB;
+  --border-subtle: #F3F4F6;
+  --border-strong: #D1D5DB;
+  --border-ledger: #E4D9BE;
+
+  /* Institutional Ink Tokens */
+  --ink-primary: #2E0854;
+  --ink-dark: #1E0538;
+  --ink-light: #F3EAF8;
+  --ink-text: #2E0854;
+  --ink-border: #E4E1EC;
+  --ink-accent: #6D28D9;
+
+  /* Institutional Parchment & Vellum Tokens */
+  --parchment-bg: #F6F1E4;
+  --parchment-border: #EDE4CD;
+  --parchment-text: #1E0538;
+  --parchment-muted: #5C5243;
+  --parchment-inset: rgba(169, 120, 47, 0.25);
+
+  /* Brass & Gilded Seal Tokens */
+  --brass-accent: #A9782F;
+  --brass-dark: #8A611F;
+  --brass-bg: #FBF4E7;
+  --brass-border: #EFD9AB;
+  --brass-text: #B8842B;
+
+  /* Status Colors */
+  --approved-text: #2F6B4A;
+  --approved-bg: #E7F1EA;
+  --approved-border: #C7E0CE;
+
+  --pending-text: #B8842B;
+  --pending-bg: #FBF1DF;
+  --pending-border: #EFD9AB;
+
+  --rejected-text: #9B3A30;
+  --rejected-bg: #FBEBE8;
+  --rejected-border: #EFC7BF;
+
+  /* Input fields & controls */
+  --input-bg: #FFFFFF;
+  --input-border: #E5E7EB;
+  --input-text: #1F2937;
+  --input-placeholder: #9CA3AF;
+  --input-focus: #2E0854;
+  --input-focus-ring: rgba(46, 8, 84, 0.15);
+
+  /* Segmented control track */
+  --seg-track-bg: rgba(237, 228, 205, 0.6);
+  --seg-track-border: rgba(169, 120, 47, 0.2);
+  --seg-active-bg: #2E0854;
+  --seg-active-text: #FFFFFF;
+  --seg-inactive-text: #2E0854;
+
+  /* Table Header */
+  --table-th-bg: #FAFAFB;
+  --table-th-text: #4B5563;
+  --table-row-hover: rgba(243, 234, 248, 0.35);
+}
+
+.dark,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* High-Contrast Late-Night Administrative Surfaces */
+  --surface-app: #0B0813;
+  --surface-card: #151022;
+  --surface-subtle: #1C162D;
+  --surface-elevated: #221B35;
+  --surface-hover: #291F3E;
+  --surface-muted: #1E1730;
+
+  /* Crisp Typography for High Legibility at Night */
+  --text-primary: #F4F0FA;
+  --text-secondary: #A59BB5;
+  --text-muted: #7E7391;
+  --text-heading: #F5EFEB;
+  --text-inverse: #0B0813;
+
+  /* Borders & Dividers */
+  --border-default: #2E253E;
+  --border-subtle: #221B32;
+  --border-strong: #403456;
+  --border-ledger: #382F24;
+
+  /* Preserved 'Ink' Identity in Nocturnal Mode */
+  --ink-primary: #8A4FDC;
+  --ink-dark: #2E0854;
+  --ink-light: #241738;
+  --ink-text: #D6BFF8;
+  --ink-border: #463363;
+  --ink-accent: #A875F0;
+
+  /* Preserved 'Parchment' Identity in Nocturnal Mode */
+  --parchment-bg: #1A1513;
+  --parchment-border: #3A3022;
+  --parchment-text: #F6F1E4;
+  --parchment-muted: #C7BAA2;
+  --parchment-inset: rgba(212, 163, 89, 0.35);
+
+  /* Brass & Gilded Seals */
+  --brass-accent: #D4A359;
+  --brass-dark: #E5B86A;
+  --brass-bg: #241C13;
+  --brass-border: #4D3B23;
+  --brass-text: #E5B86A;
+
+  /* Status Badges in High Contrast Dark Mode */
+  --approved-text: #4ADE80;
+  --approved-bg: #10261A;
+  --approved-border: #1C4D30;
+
+  --pending-text: #FBBF24;
+  --pending-bg: #271E10;
+  --pending-border: #523E1E;
+
+  --rejected-text: #F87171;
+  --rejected-bg: #2C1311;
+  --rejected-border: #592320;
+
+  /* Inputs & Administrative Controls */
+  --input-bg: #151022;
+  --input-border: #2E253E;
+  --input-text: #F4F0FA;
+  --input-placeholder: #786D8B;
+  --input-focus: #8A4FDC;
+  --input-focus-ring: rgba(138, 79, 220, 0.25);
+
+  /* Segmented control track in dark mode */
+  --seg-track-bg: #1E1730;
+  --seg-track-border: rgba(212, 163, 89, 0.25);
+  --seg-active-bg: #2E0854;
+  --seg-active-text: #FFFFFF;
+  --seg-inactive-text: #D6BFF8;
+
+  /* Table Header & Rows */
+  --table-th-bg: #1B152B;
+  --table-th-text: #C4B9D8;
+  --table-row-hover: rgba(46, 8, 84, 0.25);
+}
+
+@theme {
+  --color-brand-primary: var(--ink-primary);
+  --color-brand-dark: var(--ink-dark);
+  --color-brand-secondary: #6A1B9A;
+  --color-brand-light: var(--ink-light);
+  --color-brand-very-light: var(--surface-subtle);
+  --color-brand-bg: var(--surface-app);
+  --color-brand-surface: var(--surface-card);
+  --color-brand-text: var(--text-primary);
+  --color-brand-muted: var(--text-secondary);
+  --color-brand-border: var(--border-default);
+
+  --color-status-approved: #16A34A;
+  --color-status-pending: #F59E0B;
+  --color-status-rejected: #DC2626;
+  --color-status-info: #2563EB;
+
+  --color-ink: var(--ink-primary);
+  --color-ink-dark: var(--ink-dark);
+  --color-regalia: #6D28D9;
+  --color-brass: var(--brass-accent);
+  --color-brass-dark: var(--brass-dark);
+  --color-brass-bg: var(--brass-bg);
+  --color-parchment: var(--parchment-bg);
+  --color-parchment-edge: var(--parchment-border);
+  --color-ledger: var(--border-ledger);
+  --color-approved: var(--approved-text);
+  --color-approved-bg: var(--approved-bg);
+  --color-approved-border: var(--approved-border);
+  --color-pending-warm: var(--pending-text);
+  --color-pending-bg: var(--pending-bg);
+  --color-pending-border: var(--pending-border);
+  --color-rejected-warm: var(--rejected-text);
+  --color-rejected-bg: var(--rejected-bg);
+  --color-rejected-border: var(--rejected-border);
+
+  --font-display: 'Fraunces', serif;
+  --font-mono-ref: 'IBM Plex Mono', monospace;
+}
+
+@layer base {
+  html {
+    background-color: var(--surface-app);
+    color: var(--text-primary);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  body {
+    background-color: var(--surface-app);
+    color: var(--text-primary);
+    min-height: 100vh;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  /* Accessible focus indicators */
+  :focus-visible {
+    outline: 2px solid var(--ink-primary);
+    outline-offset: 2px;
+  }
+}
+
+/* Automatic Cascade Mapping for High-Contrast Nocturnal Administrative Operations */
+.dark body,
+.dark .bg-\[\#F7F7F9\] {
+  background-color: var(--surface-app) !important;
+}
+
+.dark .bg-white {
+  background-color: var(--surface-card) !important;
+}
+
+.dark .bg-white\/95 {
+  background-color: rgba(21, 16, 34, 0.95) !important;
+}
+
+.dark .bg-white\/80 {
+  background-color: rgba(21, 16, 34, 0.85) !important;
+}
+
+.dark .bg-\[\#FAFAFB\],
+.dark .bg-slate-50,
+.dark .bg-gray-50 {
+  background-color: var(--surface-subtle) !important;
+}
+
+.dark .bg-\[\#F6F1E4\] {
+  background-color: var(--parchment-bg) !important;
+}
+
+.dark .border-\[\#EDE4CD\] {
+  border-color: var(--parchment-border) !important;
+}
+
+.dark .bg-\[\#FBF4E7\] {
+  background-color: var(--brass-bg) !important;
+}
+
+.dark .border-\[\#EFD9AB\] {
+  border-color: var(--brass-border) !important;
+}
+
+.dark .bg-\[\#F3EAF8\] {
+  background-color: var(--ink-light) !important;
+}
+
+.dark .bg-\[\#FAF7FC\] {
+  background-color: var(--surface-muted) !important;
+}
+
+.dark .border-\[\#E5E7EB\],
+.dark .border-slate-200,
+.dark .border-gray-200 {
+  border-color: var(--border-default) !important;
+}
+
+.dark .border-slate-100,
+.dark .border-gray-100 {
+  border-color: var(--border-subtle) !important;
+}
+
+.dark .border-purple-100,
+.dark .border-purple-200,
+.dark .border-purple-300 {
+  border-color: var(--ink-border) !important;
+}
+
+.dark .divide-\[\#E4D9BE\] > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--border-ledger) !important;
+}
+
+.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]),
+.dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--border-default) !important;
+}
+
+.dark .text-\[\#1F2937\],
+.dark .text-slate-900,
+.dark .text-slate-800,
+.dark .text-gray-900,
+.dark .text-gray-800 {
+  color: var(--text-primary) !important;
+}
+
+.dark .text-\[\#6B7280\],
+.dark .text-slate-600,
+.dark .text-slate-500,
+.dark .text-gray-600,
+.dark .text-gray-500 {
+  color: var(--text-secondary) !important;
+}
+
+.dark .text-\[\#1E0538\] {
+  color: var(--text-heading) !important;
+}
+
+.dark .text-\[\#2E0854\] {
+  color: var(--ink-text) !important;
+}
+
+.dark .text-slate-700,
+.dark .text-gray-700 {
+  color: #D3CADE !important;
+}
+
+.dark .bg-\[\#EDE4CD\]\/60 {
+  background-color: var(--seg-track-bg) !important;
+  border-color: var(--seg-track-border) !important;
+}
+
+/* Status Badges */
+.dark .bg-\[\#E7F1EA\] {
+  background-color: var(--approved-bg) !important;
+}
+.dark .text-\[\#2F6B4A\] {
+  color: var(--approved-text) !important;
+}
+.dark .border-\[\#C7E0CE\] {
+  border-color: var(--approved-border) !important;
+}
+
+.dark .bg-\[\#FBF1DF\] {
+  background-color: var(--pending-bg) !important;
+}
+.dark .text-\[\#B8842B\] {
+  color: var(--pending-text) !important;
+}
+.dark .border-\[\#EFD9AB\] {
+  border-color: var(--pending-border) !important;
+}
+
+.dark .bg-\[\#FBEBE8\] {
+  background-color: var(--rejected-bg) !important;
+}
+.dark .text-\[\#9B3A30\] {
+  color: var(--rejected-text) !important;
+}
+.dark .border-\[\#EFC7BF\] {
+  border-color: var(--rejected-border) !important;
+}
+
+/* Alert & Stat Card Palette */
+.dark .border-amber-200 {
+  border-color: rgba(245, 158, 11, 0.28) !important;
+}
+.dark .text-amber-700,
+.dark .text-amber-800 {
+  color: #FBBF24 !important;
+}
+.dark .bg-amber-100,
+.dark .bg-amber-50 {
+  background-color: rgba(245, 158, 11, 0.15) !important;
+}
+
+.dark .border-emerald-200 {
+  border-color: rgba(16, 185, 129, 0.28) !important;
+}
+.dark .text-emerald-700,
+.dark .text-emerald-800,
+.dark .text-emerald-900 {
+  color: #34D399 !important;
+}
+.dark .bg-emerald-100,
+.dark .bg-emerald-50 {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+.dark .border-rose-200 {
+  border-color: rgba(244, 63, 94, 0.28) !important;
+}
+.dark .text-rose-700,
+.dark .text-rose-800,
+.dark .text-rose-900 {
+  color: #FB7185 !important;
+}
+.dark .bg-rose-100,
+.dark .bg-rose-50 {
+  background-color: rgba(244, 63, 94, 0.15) !important;
+}
+
+/* Form Inputs & Administrative Controls */
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]),
+.dark select,
+.dark textarea {
+  background-color: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  border-color: var(--input-border) !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: var(--input-placeholder) !important;
+}
+
+.dark input:focus,
+.dark select:focus,
+.dark textarea:focus {
+  border-color: var(--input-focus) !important;
+  outline-color: var(--input-focus) !important;
+}
+
+.dark .shadow-xs,
+.dark .shadow-2xs,
+.dark .shadow-sm,
+.dark .shadow {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.45) !important;
+}
+
+.dark .shadow-md,
+.dark .shadow-lg,
+.dark .shadow-xl {
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Custom Print Styles for Official Clearance Certificate and Audit Reports */
+@media print {
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+
+  header, footer, nav, button, .print\:hidden {
+    display: none !important;
+  }
+
+  #official-digital-certificate {
+    border: 4px solid #380061 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 24px !important;
+  }
+}

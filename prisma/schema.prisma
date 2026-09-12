@@ -1,0 +1,626 @@
+// Prisma Schema for FUTMINNA-FEDPOFFA Student E-Clearance Management System
+// Research-grade normalized relational schema for MySQL database engine
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+// ==========================================
+// 1. IDENTITY, ROLES & ACCESS CONTROL (RBAC)
+// ==========================================
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING_ACTIVATION
+}
+
+model User {
+  id              String      @id @default(cuid()) @db.VarChar(36)
+  email           String      @unique @db.VarChar(191)
+  passwordHash    String      @db.VarChar(255)
+  firstName       String      @db.VarChar(100)
+  lastName        String      @db.VarChar(100)
+  middleName      String?     @db.VarChar(100)
+  phoneNumber     String?     @db.VarChar(30)
+  avatarUrl       String?     @db.VarChar(255)
+  status          UserStatus  @default(ACTIVE)
+  
+  // Department association for Officers (e.g. HOD of CSC, Bursar, Librarian)
+  departmentId    String?     @db.VarChar(36)
+  department      Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
+  // Faculty association for Deans
+  facultyId       String?     @db.VarChar(36)
+  faculty         Faculty?    @relation(fields: [facultyId], references: [id], onDelete: SetNull)
+
+  // 1-to-1 Student Profile (normalized to prevent duplicate student identity records)
+  studentProfile  Student?    @relation("UserStudentProfile")
+
+  // Relationships
+  userRoles       UserRole[]
+  passwordResetTokens PasswordResetToken[]
+  approvalDecisions ApprovalDecision[]
+  assignedStages  ClearanceStageProgress[] @relation("AssignedOfficerStages")
+  issuedCertificates ClearanceCertificate[] @relation("RegistryCertificatesIssued")
+  auditLogs       AuditLog[]
+  notifications   Notification[]
+
+  lastLoginAt     DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([departmentId])
+  @@index([facultyId])
+  @@map("users")
+}
+
+model Role {
+  id          String      @id @default(cuid()) @db.VarChar(36)
+  name        String      @unique @db.VarChar(64) // e.g., "STUDENT", "HOD", "DEAN", "BURSAR", "LIBRARIAN", "REGISTRY", "SUPER_ADMIN"
+  displayName String      @db.VarChar(128)
+  description String?     @db.VarChar(255)
+  isSystem    Boolean     @default(true)
+
+  userRoles       UserRole[]
+  rolePermissions RolePermission[]
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([name])
+  @@map("roles")
+}
+
+model Permission {
+  id          String      @id @default(cuid()) @db.VarChar(36)
+  code        String      @unique @db.VarChar(100) // e.g., "CLEARANCE_APPROVE", "CERTIFICATE_GENERATE"
+  name        String      @db.VarChar(128)
+  module      String      @db.VarChar(64) // "CLEARANCE", "USER", "REPORTING", "SYSTEM"
+  description String?     @db.VarChar(255)
+
+  rolePermissions RolePermission[]
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([code])
+  @@index([module])
+  @@map("permissions")
+}
+
+model UserRole {
+  id        String   @id @default(cuid()) @db.VarChar(36)
+  userId    String   @db.VarChar(36)
+  roleId    String   @db.VarChar(36)
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  assignedAt DateTime @default(now())
+
+  @@unique([userId, roleId])
+  @@index([userId])
+  @@index([roleId])
+  @@map("user_roles")
+}
+
+model RolePermission {
+  id           String     @id @default(cuid()) @db.VarChar(36)
+  roleId       String     @db.VarChar(36)
+  permissionId String     @db.VarChar(36)
+
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  grantedAt    DateTime   @default(now())
+
+  @@unique([roleId, permissionId])
+  @@index([roleId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+// ==========================================
+// 2. ACADEMIC STRUCTURE & NORMALIZED STUDENT
+// ==========================================
+
+model Faculty {
+  id          String       @id @default(cuid()) @db.VarChar(36)
+  code        String       @unique @db.VarChar(32) // e.g., "FSET", "FMS", "FE"
+  name        String       @db.VarChar(191)
+  description String?      @db.VarChar(255)
+
+  departments Department[]
+  students    Student[]
+  officers    User[]
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([code])
+  @@map("faculties")
+}
+
+model Department {
+  id          String          @id @default(cuid()) @db.VarChar(36)
+  facultyId   String          @db.VarChar(36)
+  code        String          @unique @db.VarChar(32) // e.g., "CSC", "SLT", "EEE", "ACC"
+  name        String          @db.VarChar(191)
+  description String?         @db.VarChar(255)
+
+  faculty     Faculty         @relation(fields: [facultyId], references: [id], onDelete: Restrict)
+  students    Student[]
+  users       User[]
+  stages      WorkflowStage[]
+
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([code])
+  @@index([facultyId])
+  @@map("departments")
+}
+
+enum ProgrammeType {
+  AFFILIATE_DEGREE
+  ND_FULL_TIME
+  HND_FULL_TIME
+  PART_TIME
+}
+
+enum AcademicLevel {
+  ND_I
+  ND_II
+  HND_I
+  HND_II
+  DEGREE_100
+  DEGREE_200
+  DEGREE_300
+  DEGREE_400
+  GRADUATED
+}
+
+model Student {
+  id                  String             @id @default(cuid()) @db.VarChar(36)
+  userId              String             @unique @db.VarChar(36) // 1-to-1 normalized relationship to User
+  matricNumber        String             @unique @db.VarChar(64)
+  jambRegNumber       String?            @unique @db.VarChar(64)
+  
+  facultyId           String             @db.VarChar(36)
+  departmentId        String             @db.VarChar(36)
+  programmeType       ProgrammeType      @default(AFFILIATE_DEGREE)
+  level               AcademicLevel      @default(DEGREE_400)
+  entryYear           Int
+  graduationYear      Int
+  academicSession     String             @db.VarChar(32) // e.g., "2024/2025"
+  cgpa                Decimal?           @db.Decimal(3, 2)
+  isClearanceEligible Boolean            @default(true)
+
+  user                User               @relation("UserStudentProfile", fields: [userId], references: [id], onDelete: Cascade)
+  faculty             Faculty            @relation(fields: [facultyId], references: [id], onDelete: Restrict)
+  department          Department         @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+
+  clearanceRequests   ClearanceRequest[]
+  certificates        ClearanceCertificate[]
+
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  @@index([matricNumber])
+  @@index([jambRegNumber])
+  @@index([facultyId])
+  @@index([departmentId])
+  @@index([programmeType])
+  @@index([academicSession])
+  @@map("students")
+}
+
+// ==========================================
+// 3. CLEARANCE WORKFLOW, REQUESTS & STAGES
+// ==========================================
+
+enum ClearanceStatus {
+  DRAFT
+  SUBMITTED
+  PENDING
+  IN_PROGRESS
+  APPROVED
+  REJECTED
+  COMPLETED
+  REVOKED
+}
+
+enum StageProgressStatus {
+  NOT_STARTED
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  WAIVED
+}
+
+model ClearanceWorkflow {
+  id              String             @id @default(cuid()) @db.VarChar(36)
+  name            String             @db.VarChar(191) // e.g., "Standard FUTMINNA-FEDPOFFA Degree Clearance"
+  academicSession String             @db.VarChar(32)
+  programmeType   ProgrammeType      @default(AFFILIATE_DEGREE)
+  isActive        Boolean            @default(true)
+  description     String?            @db.Text
+
+  stages          WorkflowStage[]
+  requests        ClearanceRequest[]
+
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([academicSession])
+  @@index([programmeType])
+  @@index([isActive])
+  @@map("clearance_workflows")
+}
+
+model WorkflowStage {
+  id                     String                   @id @default(cuid()) @db.VarChar(36)
+  workflowId             String                   @db.VarChar(36)
+  stageNumber            Int                      // Sequence order (1 to 7)
+  stageCode              String                   @db.VarChar(64) // "DEPT", "FACULTY", "LIBRARY", "BURSARY", "STUDENT_AFFAIRS", "ICT_PORTAL", "REGISTRY"
+  name                   String                   @db.VarChar(191)
+  description            String?                  @db.Text
+  requiredRoleName       String                   @db.VarChar(64) // e.g., "HOD", "DEAN", "LIBRARIAN", "BURSAR"
+  
+  departmentId           String?                  @db.VarChar(36) // Optional: if tied to specific academic department
+  department             Department?              @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
+  requiresDocumentUpload Boolean                  @default(false)
+  requiredDocumentNames  String?                  @db.Text // JSON string of required document labels
+  isSequential           Boolean                  @default(true)
+  isFinalStage           Boolean                  @default(false)
+
+  workflow               ClearanceWorkflow        @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  stageProgresses        ClearanceStageProgress[]
+
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+
+  @@unique([workflowId, stageNumber])
+  @@index([workflowId])
+  @@index([stageCode])
+  @@index([stageNumber])
+  @@map("workflow_stages")
+}
+
+model ClearanceRequest {
+  id                 String                   @id @default(cuid()) @db.VarChar(36)
+  requestId          String                   @unique @db.VarChar(64) // e.g., "CLR-2026-FUT-00123"
+  studentId          String                   @db.VarChar(36)
+  workflowId         String                   @db.VarChar(36)
+  
+  status             ClearanceStatus          @default(SUBMITTED)
+  currentStageNumber Int                      @default(1)
+  
+  submissionDate     DateTime                 @default(now())
+  completionDate     DateTime?
+  rejectionReason    String?                  @db.Text
+  overallRemarks     String?                  @db.Text
+
+  student            Student                  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  workflow           ClearanceWorkflow        @relation(fields: [workflowId], references: [id], onDelete: Restrict)
+  stageProgresses    ClearanceStageProgress[]
+  documents          Document[]
+  certificate        ClearanceCertificate?
+
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+
+  @@index([requestId])
+  @@index([studentId])
+  @@index([workflowId])
+  @@index([status])
+  @@index([currentStageNumber])
+  @@map("clearance_requests")
+}
+
+model ClearanceStageProgress {
+  id                 String              @id @default(cuid()) @db.VarChar(36)
+  clearanceRequestId String              @db.VarChar(36)
+  stageId            String              @db.VarChar(36)
+  stageNumber        Int
+  
+  status             StageProgressStatus @default(NOT_STARTED)
+  
+  assignedOfficerId  String?             @db.VarChar(36)
+  assignedOfficer    User?               @relation("AssignedOfficerStages", fields: [assignedOfficerId], references: [id], onDelete: SetNull)
+
+  submittedDocuments String?             @db.LongText // JSON array with document metadata / proofs
+  remarks            String?             @db.Text
+  
+  initiatedAt        DateTime?
+  completedAt        DateTime?
+
+  clearanceRequest   ClearanceRequest    @relation(fields: [clearanceRequestId], references: [id], onDelete: Cascade)
+  stage              WorkflowStage       @relation(fields: [stageId], references: [id], onDelete: Restrict)
+  approvalDecisions  ApprovalDecision[]
+
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  @@unique([clearanceRequestId, stageId])
+  @@index([clearanceRequestId])
+  @@index([stageId])
+  @@index([status])
+  @@index([stageNumber])
+  @@index([assignedOfficerId])
+  @@map("clearance_stage_progresses")
+}
+
+// ==========================================
+// 4. CLEARANCE DOCUMENTS & EVIDENCE
+// ==========================================
+
+enum DocumentStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+model Document {
+  id                 String           @id @default(cuid()) @db.VarChar(36)
+  clearanceRequestId String           @db.VarChar(36)
+  stageNumber        Int
+  fileName           String           @db.VarChar(255)
+  filePath           String           @db.VarChar(500)
+  fileType           String           @db.VarChar(100)
+  fileSizeBytes      Int              @default(0)
+  uploadedAt         DateTime         @default(now())
+  status             DocumentStatus   @default(PENDING)
+
+  clearanceRequest   ClearanceRequest @relation(fields: [clearanceRequestId], references: [id], onDelete: Cascade)
+
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  @@index([clearanceRequestId])
+  @@index([stageNumber])
+  @@index([status])
+  @@map("documents")
+}
+
+// ==========================================
+// 5. APPROVAL DECISIONS & DIGITAL ENDORSEMENT
+// ==========================================
+
+enum DecisionType {
+  APPROVED
+  REJECTED
+  ESCALATED
+  WAIVED
+}
+
+model ApprovalDecision {
+  id              String                 @id @default(cuid()) @db.VarChar(36)
+  stageProgressId String                 @db.VarChar(36)
+  officerId       String                 @db.VarChar(36)
+  
+  decision        DecisionType           @default(APPROVED)
+  remarks         String?                @db.Text
+  
+  signatureHash   String?                @db.VarChar(255) // Cryptographic signature hash of officer
+  digitalStamp    String?                @db.VarChar(255) // Seal identifier
+  ipAddress       String?                @db.VarChar(45)  // IPv4 / IPv6 for tamper verification
+  userAgent       String?                @db.VarChar(255)
+
+  stageProgress   ClearanceStageProgress @relation(fields: [stageProgressId], references: [id], onDelete: Cascade)
+  officer         User                   @relation(fields: [officerId], references: [id], onDelete: Restrict)
+
+  createdAt       DateTime               @default(now())
+
+  @@index([stageProgressId])
+  @@index([officerId])
+  @@index([decision])
+  @@index([createdAt])
+  @@map("approval_decisions")
+}
+
+// ==========================================
+// 5. CERTIFICATES & SECURITY VERIFICATION
+// ==========================================
+
+enum CertificateStatus {
+  VALID
+  REVOKED
+  EXPIRED
+}
+
+model ClearanceCertificate {
+  id                   String            @id @default(cuid()) @db.VarChar(36)
+  certificateNumber    String            @unique @db.VarChar(64) // e.g. "FUT-FP-CLR-2026-000492"
+  clearanceRequestId   String            @unique @db.VarChar(36)
+  studentId            String            @db.VarChar(36)
+  
+  qrCodeToken          String            @unique @db.VarChar(255) // Encrypted verification token for scanner
+  issuanceDate         DateTime          @default(now())
+  expiryDate           DateTime?
+  
+  verifiedByRegistryId String?           @db.VarChar(36)
+  verifiedByRegistry   User?             @relation("RegistryCertificatesIssued", fields: [verifiedByRegistryId], references: [id], onDelete: SetNull)
+  registrySignatureHash String?          @db.VarChar(255)
+  
+  status               CertificateStatus @default(VALID)
+  fileUrl              String?           @db.VarChar(255)
+  securityMetadata     String?           @db.Text // JSON with hash integrity parameters
+
+  clearanceRequest     ClearanceRequest  @relation(fields: [clearanceRequestId], references: [id], onDelete: Restrict)
+  student              Student           @relation(fields: [studentId], references: [id], onDelete: Restrict)
+
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+
+  @@index([certificateNumber])
+  @@index([studentId])
+  @@index([qrCodeToken])
+  @@index([status])
+  @@map("clearance_certificates")
+}
+
+// ==========================================
+// 6. NOTIFICATIONS & REAL-TIME ALERTS
+// ==========================================
+
+enum NotificationType {
+  CLEARANCE_STATUS
+  APPROVAL_REQUIRED
+  REJECTION_NOTICE
+  CERTIFICATE_READY
+  SYSTEM_ALERT
+  SECURITY_WARNING
+  // --- Added: the workflow engine actually emits these two literal values. ---
+  ACTION_REQUIRED
+  SYSTEM
+}
+
+model Notification {
+  id        String           @id @default(cuid()) @db.VarChar(36)
+  userId    String           @db.VarChar(36)
+  title     String           @db.VarChar(191)
+  message   String           @db.Text
+  type      NotificationType @default(CLEARANCE_STATUS)
+  
+  isRead    Boolean          @default(false)
+  readAt    DateTime?
+  linkUrl   String?          @db.VarChar(255)
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime         @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([type])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+// ==========================================
+// 7. AUDIT LOGS (IMMUTABLE SECURITY LEDGER)
+// ==========================================
+
+enum AuditAction {
+  USER_LOGIN
+  USER_CREATE
+  USER_ROLE_ASSIGNED
+  CLEARANCE_SUBMITTED
+  STAGE_APPROVED
+  STAGE_REJECTED
+  STAGE_WAIVED
+  CERTIFICATE_ISSUED
+  CERTIFICATE_REVOKED
+  SYSTEM_SETTING_UPDATED
+  SECURITY_BREACH_ATTEMPT
+  // --- Added: the application actually emits these action names at runtime.
+  // Without them, persisting an audit entry with any of these values throws
+  // a MySQL enum-constraint error (see migration 20260909010000). ---
+  LOGIN_SUCCESS
+  LOGIN_FAILED_PASSWORD_MISMATCH
+  LOGIN_FAILED_UNKNOWN_USER
+  LOGOUT
+  USER_CREATED
+  USER_UPDATED
+  USER_DELETED
+  USER_PROFILE_UPDATED
+  PASSWORD_RESET
+  PASSWORD_RESET_REQUESTED
+  CERTIFICATE_GENERATED
+  TRANSACTION_ROLLBACK
+  STAGE_DOCUMENTS_RESUBMITTED
+  DOCUMENT_UPLOADED
+  DOCUMENT_STATUS_UPDATED
+  FACULTY_CREATED
+  WORKFLOW_STAGE_UPDATED
+  WORKFLOW_STAGES_REORDERED
+  EVALUATION_TRANSACTION_PROBE
+  EMAIL_DELIVERY_FAILED
+}
+
+model AuditLog {
+  id            String      @id @default(cuid()) @db.VarChar(36)
+  userId        String?     @db.VarChar(36)
+  userEmail     String?     @db.VarChar(191)
+  
+  action        AuditAction
+  entityType    String      @db.VarChar(64) // "CLEARANCE_REQUEST", "APPROVAL_DECISION", "CERTIFICATE", "USER"
+  entityId      String?     @db.VarChar(64)
+  
+  previousState String?     @db.LongText // JSON representation before change
+  newState      String?     @db.LongText // JSON representation after change
+  
+  ipAddress     String?     @db.VarChar(45)
+  userAgent     String?     @db.VarChar(255)
+  checksumHash  String?     @db.VarChar(255) // SHA-256 integrity hash linking previous audit trail
+
+  user          User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  createdAt     DateTime    @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([entityType])
+  @@index([entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// ==========================================
+// 8. SYSTEM CONFIGURATION & SETTINGS
+// ==========================================
+
+enum SettingCategory {
+  GENERAL
+  WORKFLOW
+  NOTIFICATION
+  SECURITY
+  AFFILIATION
+}
+
+model SystemSetting {
+  id          String          @id @default(cuid()) @db.VarChar(36)
+  key         String          @unique @db.VarChar(100) // e.g., "ENABLE_AUTO_CERTIFICATE_ISSUANCE"
+  value       String          @db.Text
+  category    SettingCategory @default(GENERAL)
+  isEncrypted Boolean         @default(false)
+  description String?         @db.VarChar(255)
+
+  updatedAt   DateTime        @updatedAt
+
+  @@index([key])
+  @@index([category])
+  @@map("system_settings")
+}
+
+// ==========================================
+// 9. AUTHENTICATION & PASSWORD RECOVERY
+// ==========================================
+
+model PasswordResetToken {
+  id          String    @id @default(cuid()) @db.VarChar(36)
+  userId      String    @db.VarChar(36)
+  tokenHash   String    @unique @db.VarChar(255)
+  expiresAt   DateTime
+  usedAt      DateTime?
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([tokenHash])
+  @@map("password_reset_tokens")
+}

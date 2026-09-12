@@ -1,0 +1,201 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 220" width="100%" height="100%">
+  <defs>
+    <!-- Gradients & Color Palettes matching official institutional seals -->
+    <linearGradient id="gearOrangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF7A00" />
+      <stop offset="50%" stop-color="#F26522" />
+      <stop offset="100%" stop-color="#D84E0B" />
+    </linearGradient>
+    
+    <linearGradient id="purpleRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5B1865" />
+      <stop offset="100%" stop-color="#400D47" />
+    </linearGradient>
+
+    <!-- Path for text along arc for FEDPOFFA gear -->
+    <path id="crestFedpoffaArc" d="M 40,118 A 66,66 0 1,1 180,118" fill="none" />
+
+    <!-- Paths for FUT MINNA Seal Arcs -->
+    <path id="crestFutArcTopUpper" d="M 780,120 A 90,90 0 1,1 960,120" fill="none" />
+    <path id="crestFutArcBottom" d="M 960,120 A 90,90 0 0,1 780,120" fill="none" />
+
+    <!-- Pattern for traditional intricate texture inside FUTMINNA petals -->
+    <pattern id="crestPetalHatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="8" stroke="#5B1865" stroke-width="1" opacity="0.75" />
+      <line x1="0" y1="0" x2="8" y2="0" stroke="#5B1865" stroke-width="1" opacity="0.75" />
+      <circle cx="4" cy="4" r="1.5" fill="#5B1865" opacity="0.9" />
+    </pattern>
+
+    <filter id="crestShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  <!-- ========================================================================= -->
+  <!-- 1. LEFT CREST: FEDERAL UNIVERSITY OF TECHNOLOGY MINNA (FUTMINNA) CREST   -->
+  <!-- ========================================================================= -->
+  <g transform="translate(115, 110)" filter="url(#crestShadow)">
+    <!-- Outer Dual Purple Rings -->
+    <circle cx="0" cy="0" r="98" fill="#FFFFFF" stroke="url(#purpleRingGrad)" stroke-width="5.5" />
+    <circle cx="0" cy="0" r="91" fill="none" stroke="#4A154B" stroke-width="1.8" />
+    <circle cx="0" cy="0" r="67" fill="#FFFFFF" stroke="url(#purpleRingGrad)" stroke-width="2.8" />
+
+    <!-- Inscription Arc: Top -->
+    <!-- Custom text rotated around the circle -->
+    <g transform="rotate(-90)">
+      <text font-family="'Arial Black', Arial, sans-serif" font-size="10.5" font-weight="900" fill="#4A154B" letter-spacing="1">
+        <textPath href="#crestFutArcTopUpper" startOffset="50%" text-anchor="middle">
+          FEDERAL UNIVERSITY OF TECHNOLOGY,
+        </textPath>
+      </text>
+    </g>
+
+    <!-- Fallback direct circular text for absolute compatibility -->
+    <text x="0" y="-76" font-family="'Arial Black', Arial, sans-serif" font-size="10" font-weight="900" fill="#4A154B" text-anchor="middle" letter-spacing="0.5">
+      FEDERAL UNIVERSITY OF TECH
+    </text>
+    <text x="0" y="83" font-family="'Arial Black', Arial, sans-serif" font-size="12" font-weight="900" fill="#4A154B" text-anchor="middle" letter-spacing="3">
+      MINNA
+    </text>
+
+    <!-- Inner Emblem Core -->
+    <g transform="translate(0, 3)">
+      <!-- 4 Loop Petals / Ornamental Quadrant -->
+      <!-- Top Petal -->
+      <path d="M 0,-14 C -23,-33 -33,-57 0,-64 C 33,-57 23,-33 0,-14 Z" fill="url(#crestPetalHatch)" stroke="#4A154B" stroke-width="2.2" />
+      <!-- Bottom Petal -->
+      <path d="M 0,14 C -23,33 -33,57 0,64 C 33,57 23,33 0,14 Z" fill="url(#crestPetalHatch)" stroke="#4A154B" stroke-width="2.2" />
+      <!-- Right Petal -->
+      <path d="M 14,0 C 33,-23 57,-33 64,0 C 57,33 33,23 14,0 Z" fill="url(#crestPetalHatch)" stroke="#4A154B" stroke-width="2.2" />
+      <!-- Left Petal -->
+      <path d="M -14,0 C -33,-23 -57,-33 -64,0 C -57,33 -33,23 -14,0 Z" fill="url(#crestPetalHatch)" stroke="#4A154B" stroke-width="2.2" />
+
+      <!-- Center Sharp 4-Pointed Purple Star -->
+      <path d="M 0,-48 L 11,-11 L 48,0 L 11,11 L 0,48 L -11,11 L -48,0 L -11,-11 Z" fill="#4A154B" stroke="#300938" stroke-width="1.8" />
+
+      <!-- Concentric Rings at Central Node -->
+      <circle cx="0" cy="0" r="15" fill="#FFFFFF" stroke="#4A154B" stroke-width="2.2" />
+      <circle cx="0" cy="0" r="8" fill="#FFFFFF" stroke="#4A154B" stroke-width="1.8" />
+      <circle cx="0" cy="0" r="3" fill="#4A154B" />
+    </g>
+
+    <!-- Sub label badge -->
+    <rect x="-45" y="93" width="90" height="15" rx="7.5" fill="#4B0082" />
+    <text x="0" y="104" font-family="'Arial Black', Arial, sans-serif" font-size="8" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">
+      FUTMINNA
+    </text>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- CENTER DIVIDER / AFFILIATION EMBLEM LINK                                  -->
+  <!-- ========================================================================= -->
+  <g transform="translate(260, 110)">
+    <!-- Vertical decorative divider line with gradient accent -->
+    <line x1="0" y1="-85" x2="0" y2="85" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3 3" />
+    
+    <!-- Central Shield Pill -->
+    <rect x="-24" y="-32" width="48" height="64" rx="24" fill="#FFFFFF" stroke="#4B0082" stroke-width="2" filter="url(#crestShadow)" />
+    
+    <!-- Cross link icon / Hands / Partnership node -->
+    <circle cx="0" cy="-8" r="8" fill="#F3EAF8" stroke="#6A1B9A" stroke-width="1.5" />
+    <text x="0" y="-5" font-family="'Arial Black', Arial, sans-serif" font-size="9" font-weight="900" fill="#4B0082" text-anchor="middle">
+      &amp;
+    </text>
+    
+    <text x="0" y="15" font-family="'Times New Roman', Times, Georgia, serif" font-size="8" font-style="italic" font-weight="700" fill="#64748B" text-anchor="middle">
+      AFFIL.
+    </text>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- 2. RIGHT CREST: THE FEDERAL POLYTECHNIC OFFA (FEDPOFFA) CREST            -->
+  <!-- ========================================================================= -->
+  <g transform="translate(405, 110)" filter="url(#crestShadow)">
+    <g transform="translate(-110, -105)">
+      <!-- 14 Gear Cog Teeth Ring -->
+      <path d="
+        M 110,12 L 122,12 L 126,27 L 142,32 L 153,20 L 163,27 L 157,43 L 171,51 L 186,44 L 192,54 L 180,68 L 191,82 L 206,81 L 207,94 L 192,99 L 197,115 L 209,122 L 204,134 L 189,132 L 185,147 L 193,159 L 183,168 L 170,160 L 159,173 L 160,183 L 149,186 L 140,175 L 126,182 L 122,192 L 110,192 L 105,182 L 91,175 L 82,186 L 71,183 L 72,173 L 61,160 L 48,168 L 38,159 L 46,147 L 42,132 L 27,134 L 22,122 L 34,115 L 39,99 L 24,94 L 25,81 L 40,82 L 51,68 L 39,54 L 45,44 L 60,51 L 74,43 L 68,27 L 78,20 L 89,32 L 105,27 Z"
+        fill="url(#gearOrangeGrad)"
+        stroke="#B33800"
+        stroke-width="2.5"
+        stroke-linejoin="round"
+      />
+
+      <!-- Inner Orange Arc Band -->
+      <circle cx="110" cy="105" r="68" fill="#F26522" stroke="#B33800" stroke-width="2" />
+      
+      <!-- Fallback / readable arc text -->
+      <text x="110" y="52" font-family="'Arial Black', Arial, sans-serif" font-weight="900" font-size="9" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">
+        FED POLY OFFA
+      </text>
+
+      <!-- Inner Core Shield -->
+      <g transform="translate(110, 105)">
+        <!-- Base Shield Outline -->
+        <circle cx="0" cy="0" r="52" fill="#FFFFFF" stroke="#1E293B" stroke-width="2.5" />
+
+        <!-- Left Half Background: Green -->
+        <path d="M 0,-52 A 52,52 0 0,0 -52,0 L 0,0 Z" fill="#008751" />
+        <path d="M -52,0 A 52,52 0 0,0 0,52 L 0,0 Z" fill="#008751" />
+
+        <!-- Right Half Background: Slate/Gray -->
+        <path d="M 0,-52 A 52,52 0 0,1 52,0 L 0,0 Z" fill="#64748B" />
+        <path d="M 52,0 A 52,52 0 0,1 0,52 L 0,0 Z" fill="#64748B" />
+
+        <!-- Left Visual: Chemistry Flask / Lab Icon -->
+        <g transform="translate(-24, -12)">
+          <path d="M 0,0 L 5,0 L 5,10 L 16,28 C 17,31 14,34 10,34 L -4,34 C -8,34 -11,31 -10,28 L 0,10 Z" fill="#FFFFFF" stroke="#0F172A" stroke-width="1.8" />
+          <path d="M -7,28 C -3,24 6,24 13,28 L 10,34 L -4,34 Z" fill="#008751" />
+          <circle cx="2" cy="18" r="2.5" fill="#008751" />
+          <circle cx="-1" cy="24" r="1.8" fill="#008751" />
+        </g>
+
+        <!-- Right Visual: Wrench & Engineering drafting tool -->
+        <g transform="translate(16, -18)">
+          <path d="M -6,0 L -2,4 L -2,28 L 2,28 L 2,4 L 6,0 C 7,-3 5,-7 1,-7 C 0,-4 -2,-4 -3,-7 C -7,-7 -8,-3 -6,0 Z" fill="#1E293B" stroke="#0F172A" stroke-width="1.2" />
+          <path d="M 10,2 L 14,2 L 13,24 L 9,24 Z" fill="#D97706" stroke="#92400E" stroke-width="1.2" />
+          <circle cx="11.5" cy="0" r="3.5" fill="#78350F" />
+        </g>
+
+        <!-- Center Top: Science Atom Symbol -->
+        <g transform="translate(0, -22)">
+          <ellipse cx="0" cy="0" rx="14" ry="5.5" fill="none" stroke="#0F172A" stroke-width="1.5" transform="rotate(0)" />
+          <ellipse cx="0" cy="0" rx="14" ry="5.5" fill="none" stroke="#0F172A" stroke-width="1.5" transform="rotate(60)" />
+          <ellipse cx="0" cy="0" rx="14" ry="5.5" fill="none" stroke="#0F172A" stroke-width="1.5" transform="rotate(120)" />
+          <circle cx="0" cy="0" r="3.5" fill="#F26522" stroke="#0F172A" stroke-width="1" />
+        </g>
+
+        <!-- Center Bottom: Open Book -->
+        <g transform="translate(0, 16)">
+          <path d="M 0,2 C -8,-2 -22,-2 -28,4 L -28,24 C -22,19 -8,19 0,22 C 8,19 22,19 28,24 L 28,4 C 22,-2 8,-2 0,2 Z" fill="#FFFFFF" stroke="#0F172A" stroke-width="2" />
+          <line x1="0" y1="2" x2="0" y2="22" stroke="#0F172A" stroke-width="2" />
+          <line x1="-22" y1="9" x2="-6" y2="7" stroke="#94A3B8" stroke-width="1.2" />
+          <line x1="-22" y1="13" x2="-6" y2="11" stroke="#94A3B8" stroke-width="1.2" />
+          <line x1="-22" y1="17" x2="-6" y2="15" stroke="#94A3B8" stroke-width="1.2" />
+          <line x1="6" y1="7" x2="22" y2="9" stroke="#94A3B8" stroke-width="1.2" />
+          <line x1="6" y1="11" x2="22" y2="13" stroke="#94A3B8" stroke-width="1.2" />
+          <line x1="6" y1="15" x2="22" y2="17" stroke="#94A3B8" stroke-width="1.2" />
+        </g>
+      </g>
+
+      <!-- Bottom Ribbon 1: "SERVICE & INNOVATION" -->
+      <g transform="translate(110, 164)">
+        <path d="M -80,0 L -70,-9 L 70,-9 L 80,0 L 68,9 L -68,9 Z" fill="#FFFFFF" stroke="#F26522" stroke-width="2" />
+        <text x="0" y="4" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="9" fill="#0F172A" text-anchor="middle" letter-spacing="1">
+          SERVICE &amp; INNOVATION
+        </text>
+      </g>
+
+      <!-- Bottom Ribbon 2: "F P O" -->
+      <g transform="translate(110, 192)">
+        <path d="M -105,-8 L -90,4 L -105,16 L -65,16 L -65,-8 Z" fill="#FFFFFF" stroke="#F26522" stroke-width="2" />
+        <path d="M 105,-8 L 90,4 L 105,16 L 65,16 L 65,-8 Z" fill="#FFFFFF" stroke="#F26522" stroke-width="2" />
+        
+        <path d="M -70,-8 L 70,-8 L 65,16 L -65,16 Z" fill="#008751" stroke="#F26522" stroke-width="2.2" />
+        <text x="0" y="9" font-family="Impact, Arial Black, sans-serif" font-weight="900" font-size="20" fill="#FFFFFF" text-anchor="middle" letter-spacing="6">
+          F P O
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>
