@@ -542,7 +542,7 @@ class RelationalStore {
         departmentId: cscDept?.id || 'dept_1',
         facultyId: fastFaculty?.id || 'fac_1',
         cgpa: 3.92,
-        activeStage: 1,
+        activeStage: 0,
         stageStatus: 'PENDING',
       },
     ];
@@ -629,6 +629,7 @@ class RelationalStore {
 
     // Build stages and requests for additional students
     additionalStudents.forEach((st, idx) => {
+      (st.activeStage === 0) { return; }
       const reqId = `req_clr_${String(idx + 2).padStart(3, '0')}`;
       const clrReq = {
         id: reqId,
